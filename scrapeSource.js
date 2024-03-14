@@ -24,7 +24,13 @@ async function scrapeSource(movieId, res) {
 		// После полной загрузки страницы получаем URL видео
 		const videoSrc = await page.evaluate(() => {
 			const video = document.querySelector('pjsdiv#oframeplayer pjsdiv video');
-			return video ? video.src : null;
+			const title = document.querySelector('#play-descr a');
+
+			if (video && title) {
+				return { sourceUrl: video.src, title: title.textContent };
+			}
+			
+			return null;
 		});
 		
 		res.json(videoSrc);
